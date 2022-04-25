@@ -16,7 +16,7 @@ st.write("""
 """)
 
 np.random.seed(9)
-equity_list = pd.read_csv("data/equity_list.csv")
+equity_list = pd.read_csv("equity_list.csv")
 
 start_date_year = 2004
 start_date_month = 1
