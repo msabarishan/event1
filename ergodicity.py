@@ -62,21 +62,20 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
 # Ensemble Average using Altair
 
     st.subheader('Ensemble Average')
-    chart4=alt.Chart(df_ens).mark_line().encode(                             
+    chart1=alt.Chart(df_ens).mark_line().encode(                             
     alt.X('index', title='timestep'),
     alt.Y('ens_avg', title='ensemble avg. at timestep')
 )
 
-    st.altair_chart(chart4,use_container_width=True)
-
-    st.write(""" ## Specific case (Reality)
-    """)
-    rand_p = np.random.randint(1, 100000)
-    fig = px.line(df_gain, x="index", y="p_gain_100")
-    fig.update_layout(
-        xaxis_title="timestep",
-        yaxis_title="gain at timestep",)
-    st.plotly_chart(fig, use_container_width=True)
+    st.altair_chart(chart1,use_container_width=True)
+# Specific Case reality using Altair
+    st.subheader('Ensemble Average')
+    chart2=alt.Chart(df_gain).mark_line().encode(                             
+    alt.X('index', title='timestep'),
+    alt.Y('p_gain_100', title='gain at timestep')
+    )
+    st.altair_chart(chart2,use_container_width=True)
+    
 
     st.write("""
     ## Histogram of money people end up with
