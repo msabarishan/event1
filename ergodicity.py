@@ -65,10 +65,7 @@ st.subheader('Ensemble Average')
 chart4=alt.Chart(df_ens).mark_line().encode(
                                           x='index',
                                           y='ens_avg'
-                                          ).configure_legend(
-                                                                         titleFontSize=14,
-                                                                                labelFontSize=10
-                                                                                ) .interactive()
+                                          )
 
 st.altair_chart(chart4,use_container_width=True)
  
