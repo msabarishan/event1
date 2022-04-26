@@ -126,7 +126,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
 """)
 
     if st.sidebar.button("Run Experiment", "run-exp-btn"):
-    run_experiment(sl_initial_amount, sl_gain_pct, sl_loss_pct, sl_leverage)
+        run_experiment(sl_initial_amount, sl_gain_pct, sl_loss_pct, sl_leverage)
 
 # initial_amount = 1000
 # gain_pct = 0.5
