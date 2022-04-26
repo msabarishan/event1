@@ -72,11 +72,11 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
 
     st.subheader('Specific Case Reality')
     rand_p = np.random.randint(1, 100000)
-    chart2=alt.Chart(df_gain).mark_line().encode(                             
+    chart1=alt.Chart(df_gain).mark_line().encode(                             
     alt.X('index', title='timestep'),
     alt.Y('p_gain_100', title='gain at timestep')
-    )
-    st.altair_chart(chart2,use_container_width=True)
+)
+    st.altair_chart(chart1,use_container_width=True)
     
 
     st.write("""
