@@ -1,173 +1,117 @@
-from datetime import date, datetime, timedelta
 import streamlit as st
 import numpy as np
 import pandas as pd
-import yfinance as yf
-import plotly.graph_objects as go
+# import seaborn as sns
 import plotly.express as px
 
-import locale
-locale.setlocale(locale.LC_ALL, '')
-
 st.write("""
-# Stock Market Portfolio Simulation
-
-### A lesson on Ergodicity
+# Ergodicity Experiment
 """)
 
 np.random.seed(9)
-equity_list = pd.read_csv("equity_list.csv")
 
-start_date_year = 2004
-start_date_month = 1
-start_date_day = 10
+def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
+    # num of time steps
+    t_N = 60
 
-start_date = str(start_date_year) + "-" + \
-    str(start_date_month) + "-" + str(start_date_day)
-end_date = date.today() - timedelta(days=1)
-
-
-@st.cache
-def load_data(equity_list):
-    with st.spinner('Downloading ticker data ...'):
-        stocks_price_df = yf.download(equity_list.Ticker.tolist(),
-                                      start=start_date,
-                                      end=end_date.strftime("%Y-%m-%d"),
-                                      actions=True,
-                                      rounding=True,
-                                      progress=False)
-
-    return stocks_price_df
-
-
-def run_experiment(initial_amount, leverage, stock_analyze_pc_df):
+    # num of people
+    p_N = 100000
 
     evt_data = {}
     gain_data = {}
 
-    p_N = len(equity_list)
+    data_load_state = st.text('Running Experiment ...')
 
     # generate data for every person
-    for tick in stock_analyze_pc_df.columns:
+    for i in range(p_N):
         # start with initial amount as leverage
         person_gain = initial_amount
-
+        
         # generate random events of gain / loss for N time steps
-        evts = stock_analyze_pc_df[tick].iloc[1:].values.tolist()
-
-        # temp state store for interim gains. Initialize it with the starting amount
+        evts = np.random.randint(0,2, t_N)
+        
+        # temp state store for interim gains
         gains = [person_gain]
-
+        
         # calc gain progression
         for e in evts:
-            # st.write(e)
-            person_gain = (person_gain * (1 - leverage)) + \
-                (person_gain * leverage * (1 + e))
+            if e == 0:
+                person_gain = (person_gain * (1 - leverage)) + (person_gain * leverage * (1 - loss_pct))
+            else:
+                person_gain = (person_gain * (1 - leverage)) + (person_gain * leverage * (1 + gain_pct))
+            
             gains.append(person_gain)
 
-        gain_data[tick] = gains
+    #         print(person_gain, e)
+            
+        # append gain data - events, gain progression, to a dictionary
+        evt_data[f"p_evt_{i+1}"] = evts
+        gain_data[f"p_gain_{i+1}"] = gains
 
-    return gain_data
+    df_gain = pd.DataFrame(gain_data)
+    df_gain = df_gain.reset_index()
+
+    df_ens = pd.DataFrame()
+    df_ens["ens_avg"] = df_gain.apply(np.mean, axis=1)
+    df_ens["ens_med"] = df_gain.apply(np.median, axis=1)
+    df_ens = df_ens.reset_index()
+
+    data_load_state.text('Experiment Completed!')
 
 
-def plot_avgs(stock_gain_df, equity_name):
-
-    stock_gain_df = stock_gain_df.set_index("date")
-    equity_ticker = equity_list[equity_list.Name.isin(
-        equity_name)].Ticker.tolist()
-
-    stock_gain_df = stock_gain_df.loc[:, equity_ticker]
-
-    fig = go.Figure()
-    for i, e_name in enumerate(equity_name):
-        fig.add_trace(go.Scatter(x=stock_gain_df.index,
-                                 y=stock_gain_df[equity_ticker[i]], mode="lines", name=e_name))
+    st.write("""
+    ## Ensemble Average
+    """)
+    fig = px.line(df_ens, x="index", y="ens_avg")
+    fig.update_layout(
+        xaxis_title="timestep",
+        yaxis_title="ensemble avg. at timestep",)
     st.plotly_chart(fig, use_container_width=True)
 
+    st.write("""
+    ## Specific case (Reality)
+    """)
+    rand_p = np.random.randint(1, 100000)
+    fig = px.line(df_gain, x="index", y="p_gain_100")
+    fig.update_layout(
+        xaxis_title="timestep",
+        yaxis_title="gain at timestep",)
+    st.plotly_chart(fig, use_container_width=True)
 
-def main():
-    df = load_data(equity_list)
+    st.write("""
+    ## Histogram of money people end up with
+    """)
+    residue = df_gain.iloc[-1].value_counts().reset_index()
+    fig = px.histogram(residue, x="index", marginal="box")
+    st.plotly_chart(fig, use_container_width=True)
 
-    sl_initial_amount = 10000
-    st.sidebar.markdown("### Set parameters for simulation")
-    sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
-    sl_start_dt = st.sidebar.date_input(
-        'Choose investment start date', date(
-            start_date_year, start_date_month, start_date_day),
-        date(start_date_year, start_date_month, start_date_day))
-    sl_end_dt = st.sidebar.date_input(
-        'Choose investment end date', (end_date - timedelta(days=2)),
-        date(start_date_year, start_date_month, start_date_day))
+sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
+sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
+sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
+sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
 
-    sl_select_tickers = st.sidebar.multiselect("Select tickers to compare performance",
-                                               equity_list.Name.tolist(),
-                                               equity_list.Name.tolist()[:3])
+st.write(f"""
+## Experiment Parameters
 
-    if (np.datetime64(sl_start_dt) > np.datetime64(sl_end_dt)):
-        st.write(f"""
-        _Error: Start Date greater than End Date_
-        * Investment Start Date = {sl_start_dt}
-        * Investment End Date = {sl_end_dt}
+* Initial Amount = ${sl_initial_amount}
+* Gain = {sl_gain_pct}
+* Loss = {sl_loss_pct}
+* Leverage = {sl_leverage}
+* Time Steps = 60
+* Number of Sequences = 100,000
+""")
 
-        Please fix the dates before proceeding
-        """
-                 )
+if st.sidebar.button("Run Experiment", "run-exp-btn"):
+    run_experiment(sl_initial_amount, sl_gain_pct, sl_loss_pct, sl_leverage)
 
-    elif (np.datetime64(sl_start_dt) < (date(
-            start_date_year, start_date_month, start_date_day))):
-        st.write(f"""
-                 _Error: Please select a later start date_
-                 * Investment Start Date={sl_start_dt}
-                 * Possible Start Date={start_date}
-
-                 Please fix the dates before proceeding
-                """
-                 )
-
-    elif (np.datetime64(sl_end_dt) > np.datetime64(end_date)):
-        st.write(f"""
-        _Error: End Date should be yesterday or earlier_
-        * Investment End Date = {sl_end_dt}
-
-        Please fix the dates before proceeding
-        """
-                 )
-
-    else:
-        df_slice = df.loc[(df.index >= np.datetime64(sl_start_dt)) & (
-            df.index <= np.datetime64(sl_end_dt))]
-
-        st.write(f"""
-        ### Parameters
-
-        * Initial Amount = {locale.currency(sl_initial_amount, grouping=True)}
-        * Leverage = {sl_leverage}
-        * Investment Start Date = {sl_start_dt}
-        * Investment End Date = {sl_end_dt}
-        """)
-
-        # cleanup data for adjusted change values
-        stock_analyze_df = df_slice.iloc[:, :len(equity_list)].copy()
-        stock_analyze_df.columns = stock_analyze_df.columns.droplevel()
-        stock_analyze_df = stock_analyze_df.fillna(
-            method="ffill", inplace=False)
-
-        # calc change percentage
-        stock_analyze_pc_df = stock_analyze_df.apply(
-            lambda x: (x - x.shift(1))/x.shift(1))
-        stock_analyze_pc_df = stock_analyze_pc_df.fillna(0)
-
-        # run simulation on button press
-        if st.sidebar.button("Run Simulation", "run-exp-btn"):
-            gain_data = run_experiment(
-                sl_initial_amount, sl_leverage, stock_analyze_pc_df)
-            stock_gain_df = pd.DataFrame(gain_data)
-            stock_gain_df["date"] = stock_analyze_pc_df.index
-
-            with st.spinner("Running Simulation..."):
-                plot_avgs(stock_gain_df, sl_select_tickers)
-            # plot_df(sl_select_tickers)
+# initial_amount = 1000
+# gain_pct = 0.5
+# loss_pct = 0.4
+# leverage = 1.0
 
 
-if __name__ == "__main__":
-    main()
+
+# fig.show()
+# sns.lineplot(x=df_ens.index, y=df_ens["ens_avg"], )
+
+# sns.lineplot(x=df_gain.index, y=df_gain["p_gain_100"])
