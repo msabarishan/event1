@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 # import seaborn as sns
 import plotly.express as px
+import altair as alt
 
 st.write("""
 # Ergodicity Experiment
@@ -59,14 +60,14 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     data_load_state.text('Experiment Completed!')
 
 
-    st.write("""
-    ## Ensemble Average
-    """)
-    fig = px.line(df_ens, x="index", y="ens_avg")
-    fig.update_layout(
-        xaxis_title="timestep",
-        yaxis_title="ensemble avg. at timestep",)
-    st.plotly_chart(fig, use_container_width=True)
+    st.subheader('Ensemble Average')
+    chart1=alt.Chart(df_ens).mark_line().encode(                             
+        alt.X('index', title='timestep'),
+        alt.Y('ens_avg', title='ensemble avg. at timestep')
+    )
+
+    st.altair_chart(chart1,use_container_width=True)
+
 
     st.write("""
     ## Specific case (Reality)
