@@ -97,10 +97,10 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     fig = px.histogram(residue, x="index", marginal="box")
     st.plotly_chart(fig, use_container_width=True)
 
-sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
-sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
-sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
-sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
+    sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
+    sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
+    sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
+    sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
 
     st.write("""
     ## Histogram of money people end up with
@@ -109,13 +109,13 @@ sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
     fig = px.histogram(residue, x="index", marginal="box")
     st.plotly_chart(fig, use_container_width=True)
 
-sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
-sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
-sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
-sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
+    sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
+    sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
+    sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
+    sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
 
-st.write(f"""
-## Experiment Parameters
+    st.write(f"""
+    ## Experiment Parameters
 
 * Initial Amount = ${sl_initial_amount}
 * Gain = {sl_gain_pct}
@@ -125,7 +125,7 @@ st.write(f"""
 * Number of Sequences = 100,000
 """)
 
-if st.sidebar.button("Run Experiment", "run-exp-btn"):
+    if st.sidebar.button("Run Experiment", "run-exp-btn"):
     run_experiment(sl_initial_amount, sl_gain_pct, sl_loss_pct, sl_leverage)
 
 # initial_amount = 1000
