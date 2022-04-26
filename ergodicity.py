@@ -70,15 +70,15 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     st.altair_chart(chart1,use_container_width=True)
     
     
-st.write("""
+    st.write("""
     ## Specific case (Reality)
     """)
-    rand_p = np.random.randint(1, 100000)
-    fig = px.line(df_gain, x="index", y="p_gain_100")
-    fig.update_layout(
-        xaxis_title="timestep",
-        yaxis_title="gain at timestep",)
-    st.plotly_chart(fig, use_container_width=True)
+       rand_p = np.random.randint(1, 100000)
+       fig = px.line(df_gain, x="index", y="p_gain_100")
+       fig.update_layout(
+           xaxis_title="timestep",
+           yaxis_title="gain at timestep",)
+       st.plotly_chart(fig, use_container_width=True)
     
     # Ensemble Histogram
      st.subheader('Ensemble Average')
