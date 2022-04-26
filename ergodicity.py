@@ -61,8 +61,8 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
 
 # Ensemble Average using Altair
 
-      st.subheader('Ensemble Average')
-     chart4=alt.Chart(df_ens).mark_line().encode(
+    st.subheader('Ensemble Average')
+    chart4=alt.Chart(df_ens).mark_line().encode(
                                           x='index',
                                           y='ens_avg'
                                           )
