@@ -61,17 +61,15 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
 
 # Ensemble Average using Altair
 
-st.subheader('Ensemble Average')
-chart4=alt.Chart(df_ens).mark_line().encode(
+      st.subheader('Ensemble Average')
+     chart4=alt.Chart(df_ens).mark_line().encode(
                                           x='index',
                                           y='ens_avg'
                                           )
 
-st.altair_chart(chart4,use_container_width=True)
- 
+    st.altair_chart(chart4,use_container_width=True)
 
-    st.write("""
-    ## Specific case (Reality)
+    st.write(""" ## Specific case (Reality)
     """)
     rand_p = np.random.randint(1, 100000)
     fig = px.line(df_gain, x="index", y="p_gain_100")
