@@ -63,7 +63,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     st.subheader('Ensemble Average')
     chart1=alt.Chart(df_ens).mark_line().encode(                             
         alt.X('index', title='timestep'),
-        alt.Y('ens_avg', title='ensemble avg. at timestep')
+        alt.Y('p_gain_100', title='ensemble avg. at timestep')
     )
 
     st.altair_chart(chart1,use_container_width=True)
