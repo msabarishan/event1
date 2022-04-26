@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 # import seaborn as sns
 import plotly.express as px
-import altair as alt
 
 st.write("""
 # Ergodicity Experiment
@@ -59,48 +58,25 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
 
     data_load_state.text('Experiment Completed!')
 
-# Ensemble Average using Altair
 
-    st.subheader('Ensemble Average')
-    chart1=alt.Chart(df_ens).mark_line().encode(                             
-    alt.X('index', title='timestep'),
-    alt.Y('ens_avg', title='ensemble avg. at timestep')
-)
+    st.write("""
+    ## Ensemble Average
+    """)
+    fig = px.line(df_ens, x="index", y="ens_avg")
+    fig.update_layout(
+        xaxis_title="timestep",
+        yaxis_title="ensemble avg. at timestep",)
+    st.plotly_chart(fig, use_container_width=True)
 
-    st.altair_chart(chart1,use_container_width=True)
-    
-    
     st.write("""
     ## Specific case (Reality)
     """)
     rand_p = np.random.randint(1, 100000)
     fig = px.line(df_gain, x="index", y="p_gain_100")
     fig.update_layout(
-           xaxis_title="timestep",
-           yaxis_title="gain at timestep",)
+        xaxis_title="timestep",
+        yaxis_title="gain at timestep",)
     st.plotly_chart(fig, use_container_width=True)
-    
-    # Ensemble Histogram
-    st.subheader('Ensemble Average')
-    residue = df_gain.iloc[-1].value_counts().reset_index()
-    chart2=alt.Chart(residue).mark_bar().encode(                             
-    alt.X('index'),
-    alt.Y('box')
-)
-
-    st.altair_chart(chart2,use_container_width=True)
-
-    st.write("""
-    ## Histogram of money people end up with
-    """)
-    
-    fig = px.histogram(residue, x="index", marginal="box")
-    st.plotly_chart(fig, use_container_width=True)
-
-    sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
-    sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
-    sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
-    sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
 
     st.write("""
     ## Histogram of money people end up with
@@ -109,13 +85,13 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     fig = px.histogram(residue, x="index", marginal="box")
     st.plotly_chart(fig, use_container_width=True)
 
-    sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
-    sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
-    sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
-    sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
+sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
+sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
+sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
+sl_leverage = st.sidebar.slider('Leverage', 0.0, 1.0, 1.0)
 
-    st.write(f"""
-    ## Experiment Parameters
+st.write(f"""
+## Experiment Parameters
 
 * Initial Amount = ${sl_initial_amount}
 * Gain = {sl_gain_pct}
@@ -125,8 +101,8 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
 * Number of Sequences = 100,000
 """)
 
-    if st.sidebar.button("Run Experiment", "run-exp-btn"):
-        run_experiment(sl_initial_amount, sl_gain_pct, sl_loss_pct, sl_leverage)
+if st.sidebar.button("Run Experiment", "run-exp-btn"):
+    run_experiment(sl_initial_amount, sl_gain_pct, sl_loss_pct, sl_leverage)
 
 # initial_amount = 1000
 # gain_pct = 0.5
