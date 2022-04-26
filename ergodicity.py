@@ -81,7 +81,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     st.plotly_chart(fig, use_container_width=True)
     
     # Ensemble Histogram
-     st.subheader('Ensemble Average')
+    st.subheader('Ensemble Average')
     residue = df_gain.iloc[-1].value_counts().reset_index()
     chart2=alt.Chart(residue).mark_bar().encode(                             
     alt.X('index'),
