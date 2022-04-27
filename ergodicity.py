@@ -75,7 +75,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     alt.Y(100, title='gain at timestep')
     )
 
-    st.altair_chart(char2,use_container_width=True)
+    st.altair_chart(chart2,use_container_width=True)
 
     st.write("""
     ## Histogram of money people end up with
