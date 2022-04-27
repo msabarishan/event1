@@ -46,8 +46,8 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     #         print(person_gain, e)
             
         # append gain data - events, gain progression, to a dictionary
-        evt_data[f"p_evt_{i+1}"] = evts
-        gain_data[f"p_gain_{i+1}"] = gains
+        evt_data[i+1] = evts
+        gain_data[i+1] = gains
 
     df_gain = pd.DataFrame(gain_data)
     df_gain = df_gain.reset_index()
@@ -72,7 +72,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     ## Specific case (Reality)
     """)
     rand_p = np.random.randint(1, 100000)
-    fig = px.line(df_gain, x="index", y="p_gain_100")
+    fig = px.line(df_gain, x="index", y="100")
     fig.update_layout(
         xaxis_title="timestep",
         yaxis_title="gain at timestep",)
