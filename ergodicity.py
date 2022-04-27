@@ -47,28 +47,26 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
         # append gain data - events, gain progression, to a dictionary
         evt_data[f"p_evt_{i+1}"] = evts
         gain_data[f"p_gain_{i+1}"] = gains
+df_gain = pd.DataFrame(gain_data)
+df_gain = df_gain.reset_index()
 
-    df_gain = pd.DataFrame(gain_data)
-    df_gain = df_gain.reset_index()
+df_ens = pd.DataFrame()
+df_ens["ens_avg"] = df_gain.apply(np.mean, axis=1)
+df_ens["ens_med"] = df_gain.apply(np.median, axis=1)
+df_ens = df_ens.reset_index()
 
-    df_ens = pd.DataFrame()
-    df_ens["ens_avg"] = df_gain.apply(np.mean, axis=1)
-    df_ens["ens_med"] = df_gain.apply(np.median, axis=1)
-    df_ens = df_ens.reset_index()
+data_load_state.text('Experiment Completed!')
 
-    data_load_state.text('Experiment Completed!')
-
-
-    st.write("""
+st.write("""
     ## Ensemble Average
     """)
-    fig = px.line(df_ens, x="index", y="ens_avg")
+     fig = px.line(df_ens, x="index", y="ens_avg")
     fig.update_layout(
         xaxis_title="timestep",
         yaxis_title="ensemble avg. at timestep",)
-    st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True)
 
-    st.write("""
+st.write("""
     ## Specific case (Reality)
     """)
     rand_p = np.random.randint(1, 100000)
@@ -76,7 +74,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     fig.update_layout(
         xaxis_title="timestep",
         yaxis_title="gain at timestep",)
-    st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True)
 
     st.write("""
     ## Histogram of money people end up with
@@ -130,11 +128,11 @@ chart1=alt.Chart(df_ens).mark_line().encode(
 st.altair_chart(chart1,use_container_width=True)
     
 # Ensemble Histogram
-    st.subheader('Ensemble Average')
-    residue = df_gain.iloc[-1].value_counts().reset_index()
-    chart2=alt.Chart(residue).mark_bar().encode(                             
+st.subheader('Ensemble Average')
+residue = df_gain.iloc[-1].value_counts().reset_index()
+chart2=alt.Chart(residue).mark_bar().encode(                             
     alt.X('index'),
     alt.Y('box')
 )
 
-    st.altair_chart(chart2,use_container_width=True)
+st.altair_chart(chart2,use_container_width=True)
