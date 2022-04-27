@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 # import seaborn as sns
 import plotly.express as px
-import altair as alt
 
 st.write("""
 # Ergodicity Experiment
@@ -60,19 +59,19 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     data_load_state.text('Experiment Completed!')
 
 
-    st.subheader('Ensemble Average')
-    chart1=alt.Chart(df_gain).mark_line().encode(                             
-        alt.X('index', title='timestep'),
-        alt.Y('p_gain_100', title='ensemble avg. at timestep')
-    )
-
-    st.altair_chart(chart1,use_container_width=True)
-
+    st.write("""
+    ## Ensemble Average
+    """)
+    fig = px.line(df_ens, x="index", y="ens_avg")
+    fig.update_layout(
+        xaxis_title="timestep",
+        yaxis_title="ensemble avg. at timestep",)
+    st.plotly_chart(fig, use_container_width=True)
 
     st.write("""
     ## Specific case (Reality)
     """)
-
+    rand_p = np.random.randint(1, 100000)
     fig = px.line(df_gain, x="index", y="p_gain_100")
     fig.update_layout(
         xaxis_title="timestep",
@@ -116,3 +115,26 @@ if st.sidebar.button("Run Experiment", "run-exp-btn"):
 # sns.lineplot(x=df_ens.index, y=df_ens["ens_avg"], )
 
 # sns.lineplot(x=df_gain.index, y=df_gain["p_gain_100"])
+
+
+
+# Altair codes
+# Ensemble Average using Altair
+
+st.subheader('Ensemble Average')
+chart1=alt.Chart(df_ens).mark_line().encode(                             
+    alt.X('index', title='timestep'),
+    alt.Y('ens_avg', title='ensemble avg. at timestep')
+)
+
+st.altair_chart(chart1,use_container_width=True)
+    
+# Ensemble Histogram
+    st.subheader('Ensemble Average')
+    residue = df_gain.iloc[-1].value_counts().reset_index()
+    chart2=alt.Chart(residue).mark_bar().encode(                             
+    alt.X('index'),
+    alt.Y('box')
+)
+
+    st.altair_chart(chart2,use_container_width=True)
