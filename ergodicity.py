@@ -46,8 +46,8 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     #         print(person_gain, e)
             
         # append gain data - events, gain progression, to a dictionary
-        evt_data[i+1] = evts
-        gain_data[i+1] = gains
+        evt_data[{i+1}] = evts
+        gain_data[{i+1}] = gains
 
     df_gain = pd.DataFrame(gain_data)
     df_gain = df_gain.reset_index()
