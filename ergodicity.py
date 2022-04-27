@@ -72,7 +72,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     ## Specific case (Reality)
     """)
     rand_p = np.random.randint(1, 100000)
-    fig = px.line(df_gain, x="index", y="100")
+    fig = px.line(df_gain, x="index", y=100)
     fig.update_layout(
         xaxis_title="timestep",
         yaxis_title="gain at timestep",)
