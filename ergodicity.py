@@ -66,17 +66,16 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     )
 
     st.altair_chart(chart1,use_container_width=True)
+    
+    data_load_state.text('Experiment Completed!')
+    
+    st.subheader('Specific case')
+    chart2=alt.Chart(df_gain).mark_line().encode(                             
+    alt.X('index', title='timestep'),
+    alt.Y(100, title='gain at timestep')
+    )
 
-
-    st.write("""
-    ## Specific case (Reality)
-    """)
-    rand_p = np.random.randint(1, 100000)
-    fig = px.line(df_gain, x="index", y=100)
-    fig.update_layout(
-        xaxis_title="timestep",
-        yaxis_title="gain at timestep",)
-    st.plotly_chart(fig, use_container_width=True)
+    st.altair_chart(char2,use_container_width=True)
 
     st.write("""
     ## Histogram of money people end up with
