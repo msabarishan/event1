@@ -72,7 +72,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     st.subheader('Specific case')
     chart2=alt.Chart(df_gain).mark_line().encode(                             
     alt.X('index', title='timestep'),
-    alt.Y(100, title='gain at timestep')
+    alt.Y('100', title='gain at timestep')
     )
 
     st.altair_chart(chart2,use_container_width=True)
