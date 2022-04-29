@@ -52,6 +52,8 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
 
     df_gain = pd.DataFrame(gain_data)
     df_gain = df_gain.reset_index()
+    
+    df_gain1 = df_gain[["p_gain_100"]]
 
     df_ens = pd.DataFrame()
     df_ens["ens_avg"] = df_gain.apply(np.mean, axis=1)
@@ -71,10 +73,10 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     data_load_state.text('Experiment Completed!')
     
     st.subheader('Specific case')
-    chart2=alt.Chart(df_gain).mark_line().encode(                             
+    chart2=alt.Chart(df_gain1).mark_line().encode(                             
     alt.X('index', title='timestep'),
     alt.Y('p_gain_100', title='gain at timestep')
-    )
+    )# p_gain_100
 
     st.altair_chart(chart2,use_container_width=True)
 
