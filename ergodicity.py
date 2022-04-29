@@ -53,7 +53,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     df_gain = pd.DataFrame(gain_data)
     df_gain = df_gain.reset_index()
     
-    df_gain1 = df_gain[["p_gain_100"]]
+    df_gain1 = df_gain[["index","p_gain_100"]]
 
     df_ens = pd.DataFrame()
     df_ens["ens_avg"] = df_gain.apply(np.mean, axis=1)
