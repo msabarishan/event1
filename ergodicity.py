@@ -84,7 +84,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     
     residue = df_gain.iloc[-1].value_counts().reset_index()
     chart3 = alt.Chart(residue).mark_bar().encode(
-        x = alt.X('index'),bin = alt.BinParams(maxbins = 30)), y = 'box')
+        x = alt.X('index'),y = 'box')
     st.altair_chart(chart3,use_container_width=True)
     
 sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
