@@ -81,8 +81,10 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     st.altair_chart(chart2,use_container_width=True)
     
     st.subheader('Histogram')
+    residue= df_gain.iloc[-1].value_counts().reset_index()
+    residue.rename(columns = {60 : 'box'}, inplace = True)
     
-    chart3 = alt.Chart(df_gain.iloc[-1].value_counts().reset_index()).mark_bar().encode(
+    chart3 = alt.Chart(residue.mark_bar().encode(
        alt.X('index',title='index'),
        alt.Y('box',title='box')
        ). properties(
