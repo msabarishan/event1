@@ -81,6 +81,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     st.altair_chart(chart2,use_container_width=True)
     
     st.subheader(‘Histogram of money people end up with’)
+    
     residue = df_gain.iloc[-1].value_counts().reset_index()
     chart3 = alt.Chart(residue).mark_bar().encode(
         x = alt.X('index'), y = alt.Y(‘box’))
