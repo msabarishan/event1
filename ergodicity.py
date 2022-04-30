@@ -79,14 +79,13 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     )# p_gain_100
 
     st.altair_chart(chart2,use_container_width=True)
-
-    st.write("""
-    ## Histogram of money people end up with
-    """)
+    
+    st.subheader(‘Histogram of money people end up with’)
     residue = df_gain.iloc[-1].value_counts().reset_index()
-    fig = px.histogram(residue, x="index", marginal="box")
-    st.plotly_chart(fig, use_container_width=True)
-
+    chart3 = alt.Chart(residue).mark_bar().encode(
+        x = alt.X('index'), y = alt.Y(‘box’))
+    st.altair_chart(chart3,use_container_width=True)
+    
 sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
 sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
 sl_loss_pct = st.sidebar.slider('Loss %', 0.0, 1.0, 0.4)
