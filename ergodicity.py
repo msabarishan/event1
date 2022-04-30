@@ -82,7 +82,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
     
     st.subheader('Histogram')
     
-    Chart3 = alt.Chart(df_gain.iloc[-1].value_counts().reset_index()).mark_bar().encode(
+    chart3 = alt.Chart(df_gain.iloc[-1].value_counts().reset_index()).mark_bar().encode(
        alt.X('index',title='index'),
        alt.Y('box',title='box')
        ). properties(
