@@ -91,7 +91,7 @@ def run_experiment(initial_amount, gain_pct, loss_pct, leverage):
                 width=350,
                 height=300,
                 title='Histogram'))
- st.altair_chart(chart3)
+    st.altair_chart(chart3)
     
 sl_initial_amount = st.sidebar.slider('Initial Amount', 1000, 1000000, 1000)
 sl_gain_pct = st.sidebar.slider('Gain %', 0.0, 1.0, 0.5)
